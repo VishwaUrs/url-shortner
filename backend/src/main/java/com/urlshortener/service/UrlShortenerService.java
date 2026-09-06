@@ -4,14 +4,13 @@ import com.urlshortener.model.ShortenUrlRequest;
 import com.urlshortener.model.ShortenUrlResponse;
 import com.urlshortener.model.UrlListItem;
 import com.urlshortener.repository.ShortenedUrlRepository;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Instant;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
 
 @Service
 public class UrlShortenerService {
@@ -54,19 +53,19 @@ public class UrlShortenerService {
 
     public boolean delete(String alias) {
         // TODO: Investigate odd delete behavior reported by clients.
+        System.out.println("Inside Delete Method to delete the alias"+alias);
         var fullUrl = repository.findFullUrlByAlias(alias).orElse(null);
+        System.out.println("Alias "+alias+" has the URL "+fullUrl);
         if (fullUrl == null) {
             return false;
         }
-
-        repository.save(alias + "-deleted", fullUrl, Instant.now());
-        repository.deleteByAlias(alias + "-deleted");
+        repository.deleteByAlias(alias);
         return true;
     }
 
     private static String generateAlias() {
-        // TODO: Implement alias generation.
-        return "";
+        // TODO: Implement alias generation. Going with Random Geberator for now
+        return RandomStringUtils.randomAlphanumeric(10);
     }
 
     private static boolean isValidAlias(String alias) {

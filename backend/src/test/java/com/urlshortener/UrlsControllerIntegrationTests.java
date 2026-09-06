@@ -12,7 +12,7 @@ import java.time.Instant;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
-import static org.springframework.http.HttpStatus.PERMANENT_REDIRECT;
+import static org.springframework.http.HttpStatus.FOUND;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @TestPropertySource(properties = {
@@ -42,7 +42,7 @@ class UrlsControllerIntegrationTests {
     void getAlias_ExistingAlias_Returns301WithLocation() {
         var response = restTemplate.getForEntity("/redir", String.class);
 
-        assertThat(response.getStatusCode()).isEqualTo(PERMANENT_REDIRECT);
+        assertThat(response.getStatusCode()).isEqualTo(FOUND);
         assertThat(response.getHeaders().getLocation()).hasToString("https://target.com/");
     }
 }

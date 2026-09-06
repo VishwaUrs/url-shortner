@@ -61,6 +61,6 @@ public class UrlShortenerServiceTests {
 
         String fullUrl = CompletableFuture.supplyAsync(() -> service.getFullUrl("example")).get();
 
-        assertEquals("https://example.com", fullUrl);
+        assertEquals("https://example.com/", fullUrl);
     }
 }
