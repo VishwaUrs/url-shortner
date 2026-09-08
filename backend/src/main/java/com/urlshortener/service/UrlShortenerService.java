@@ -4,13 +4,14 @@ import com.urlshortener.model.ShortenUrlRequest;
 import com.urlshortener.model.ShortenUrlResponse;
 import com.urlshortener.model.UrlListItem;
 import com.urlshortener.repository.ShortenedUrlRepository;
-import org.apache.commons.lang3.RandomStringUtils;
+import com.urlshortener.util.AliasGenerator;
 import org.springframework.stereotype.Service;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UrlShortenerService {
@@ -26,21 +27,25 @@ public class UrlShortenerService {
 
     public ShortenUrlResponse shorten(ShortenUrlRequest request, String baseUrl) {
         var fullUrl = normalizeUrl(request.getFullUrl());
-        var alias = request.getCustomAlias() == null || request.getCustomAlias().isBlank()
-                ? generateAlias()
-                : request.getCustomAlias().trim();
 
-        if (!isValidAlias(alias)) {
-            throw new IllegalArgumentException("Alias may only contain letters, numbers, and hyphens (2–64 characters).");
+        Optional<String> alias = repository.checkAndRetrieveAliasIfURLExists(fullUrl);
+        if(repository.checkAndRetrieveAliasIfURLExists(fullUrl).isPresent()){
+            return new ShortenUrlResponse(baseUrl + "/" + alias.get(), alias.get(), fullUrl);
+        } else {
+            alias = Optional.of(request.getCustomAlias() == null || request.getCustomAlias().isBlank()
+                    ? generateAlias()
+                    : request.getCustomAlias().trim());
+
+            if (!isValidAlias(alias.get())) {
+                throw new IllegalArgumentException("Alias may only contain letters, numbers, and hyphens (2–64 characters).");
+            }
+
+            if (repository.existsByAlias(alias.get())) {
+                throw new IllegalStateException("The alias '" + alias + "' is already taken.");
+            }
+                repository.save(alias.get(), fullUrl, Instant.now());
+                return new ShortenUrlResponse(baseUrl + "/" + alias.get(), alias.get(), fullUrl);
         }
-
-        if (repository.existsByAlias(alias)) {
-            throw new IllegalStateException("The alias '" + alias + "' is already taken.");
-        }
-
-        repository.save(alias, fullUrl, Instant.now());
-
-        return new ShortenUrlResponse(baseUrl + "/" + alias, alias, fullUrl);
     }
 
     public String getFullUrl(String alias) {
@@ -64,8 +69,8 @@ public class UrlShortenerService {
     }
 
     private static String generateAlias() {
-        // TODO: Implement alias generation. Going with Random Geberator for now
-        return RandomStringUtils.randomAlphanumeric(10);
+        // TODO: Implement alias generation.
+        return AliasGenerator.randomAliasGenerate(GENERATED_ALIAS_LENGTH);
     }
 
     private static boolean isValidAlias(String alias) {
@@ -77,18 +82,18 @@ public class UrlShortenerService {
 
     private static String normalizeUrl(String fullUrl) {
         if (fullUrl == null || fullUrl.isBlank()) {
-            throw new IllegalArgumentException("fullUrl is required.");
+            throw new IllegalArgumentException("Full Url is required.");
         }
 
         try {
             var uri = new URI(fullUrl.trim());
             if (uri.getScheme() == null || uri.getHost() == null) {
-                throw new IllegalArgumentException("fullUrl must be a valid URL.");
+                throw new IllegalArgumentException("Full Url must be a valid URL. Host/Scheme is missing");
             }
 
             var scheme = uri.getScheme().toLowerCase();
             if (!scheme.equals("http") && !scheme.equals("https")) {
-                throw new IllegalArgumentException("fullUrl must be a valid URL.");
+                throw new IllegalArgumentException("Full Url must be a valid URL. Unsupported Scheme");
             }
 
             var path = uri.getPath();
@@ -106,7 +111,7 @@ public class UrlShortenerService {
                     uri.getFragment()
             ).toString();
         } catch (URISyntaxException ex) {
-            throw new IllegalArgumentException("fullUrl must be a valid URL.");
+            throw new IllegalArgumentException("`Full Url must be a valid URL.");
         }
     }
 }
