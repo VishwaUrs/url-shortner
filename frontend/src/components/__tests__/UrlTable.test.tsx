@@ -4,8 +4,8 @@ import { UrlTable } from '../UrlTable';
 import type { UrlListItem } from '../../types/api';
 
 const mockUrls: UrlListItem[] = [
-  { alias: 'abc', fullUrl: 'https://example.com', shortUrl: 'http://localhost:8080/abc' },
-  { alias: 'def', fullUrl: 'https://another.com/path', shortUrl: 'http://localhost:8080/def' },
+  { alias: 'abc', fullUrl: 'https://example.com', shortUrl: 'http://localhost:8080/abc', createdAt : '2026-09-08T23:45:19.540937793Z'},
+  { alias: 'def', fullUrl: 'https://another.com/path', shortUrl: 'http://localhost:8080/def', createdAt : '2025-11-02T23:45:19.540937793Z'},
 ];
 
 describe('UrlTable', () => {

@@ -4,14 +4,16 @@ public class UrlListItem {
     private String alias;
     private String fullUrl;
     private String shortUrl;
+    private String createdAt;
 
     public UrlListItem() {
     }
 
-    public UrlListItem(String alias, String fullUrl, String shortUrl) {
+    public UrlListItem(String alias, String fullUrl, String shortUrl, String createdAt) {
         this.alias = alias;
         this.fullUrl = fullUrl;
         this.shortUrl = shortUrl;
+        this.createdAt = createdAt;
     }
 
     public String getAlias() {
@@ -37,4 +39,8 @@ public class UrlListItem {
     public void setShortUrl(String shortUrl) {
         this.shortUrl = shortUrl;
     }
+
+    public String getCreatedAt() {return createdAt;}
+
+    public void setCreatedAt(String createdAt) {this.createdAt = createdAt;}
 }

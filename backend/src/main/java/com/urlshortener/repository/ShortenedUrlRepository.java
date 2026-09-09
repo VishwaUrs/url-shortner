@@ -63,7 +63,7 @@ public class ShortenedUrlRepository {
     }
 
     public List<UrlListItem> findAll(String baseUrl) {
-        return jdbc.query("SELECT ALIAS, FULL_URL FROM SHORTENED_URLS",
+        return jdbc.query("SELECT ALIAS, FULL_URL, CREATED_AT FROM SHORTENED_URLS",
                 urlListItemMapper(baseUrl));
     }
 
@@ -76,7 +76,8 @@ public class ShortenedUrlRepository {
         return (ResultSet rs, int rowNum) -> new UrlListItem(
                 rs.getString("ALIAS"),
                 rs.getString("FULL_URL"),
-                baseUrl + "/" + rs.getString("ALIAS")
+                baseUrl + "/" + rs.getString("ALIAS"),
+                rs.getString("CREATED_AT")
         );
     }
 }

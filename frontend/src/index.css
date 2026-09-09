@@ -313,7 +313,7 @@ input:disabled { opacity: 0.6; cursor: not-allowed; }
 
 .short-url-link {
   font-family: var(--font-mono);
-  font-size: 13px;
+  font-size: 5px;
   color: var(--accent);
   text-decoration: none;
   font-weight: 500;
@@ -322,13 +322,22 @@ input:disabled { opacity: 0.6; cursor: not-allowed; }
 
 .full-url {
   display: block;
-  max-width: 340px;
+  max-width: 140px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   color: var(--ink-muted);
   font-size: 13px;
 }
+.created-at {
+  display: block;
+  max-width: 30px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--ink-muted);
+  font-size: 13px;
+}
+
 .actions-cell { text-align: right; width: 80px; }
 
 /* ── Empty state ─────────────────────────────────── */

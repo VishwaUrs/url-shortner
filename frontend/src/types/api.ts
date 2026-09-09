@@ -13,6 +13,7 @@ export interface UrlListItem {
   alias: string;
   fullUrl: string;
   shortUrl: string;
+  createdAt: string;
 }
 
 export interface ApiError {
