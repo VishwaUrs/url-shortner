@@ -1,6 +1,6 @@
 import type { ShortenUrlRequest, ShortenUrlResponse, UrlListItem } from '../types/api';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL ?? '';
+export const API_BASE = import.meta.env.VITE_API_BASE_URL ?? '';
 
 async function handleResponse<T>(res: Response): Promise<T> {
   if (!res.ok) {
@@ -36,4 +36,12 @@ export const api = {
       method: 'DELETE',
     }).then((r) => handleResponse<void>(r));
   },
+
+  getFullURL(alias: string) : Promise<UrlListItem> {
+    return fetch(`${API_BASE}/${encodeURIComponent(alias)}`, {
+      method: 'GET',
+    }).then((r) => handleResponse<UrlListItem>(r));
+  },
+
+
 };
