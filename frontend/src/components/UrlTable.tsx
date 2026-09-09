@@ -20,7 +20,7 @@ export function UrlTable({ urls, onDelete }: UrlTableProps) {
       return sortDirection === 'asc' ? diff : -diff;
     });
   }, [urls, sortDirection]);
-  console.log("sortedurls", sortedUrls);
+  console.log("API Base URL", API_BASE);
   const toggleSort = () => {
     setSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'));
   };
@@ -35,7 +35,7 @@ export function UrlTable({ urls, onDelete }: UrlTableProps) {
           <thead>
           <tr>
             <th>#</th>
-            <th>Original FullURL</th>
+            <th>Original Full URL</th>
             <th>Short URL</th>
             <th className="sortable-header" onClick={toggleSort}>
               Created At {sortDirection === 'desc' ? '▼' : '▲'}
@@ -54,10 +54,10 @@ export function UrlTable({ urls, onDelete }: UrlTableProps) {
                 </td>
                 <td>
                   <a className="short-url-link"
-                     href={`${API_BASE}/${item.alias}`}
+                     href={`${item.shortUrl}`}
                       target="_blank"
                       rel="noopener noreferrer">
-                    {item.alias}
+                    {`${item.shortUrl}`}
                   </a>
                 </td>
                 <td>

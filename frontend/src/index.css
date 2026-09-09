@@ -47,7 +47,7 @@ body {
 }
 .app-header__inner {
   max-width: 760px;
-  margin: 0 auto;
+  margin: 0 auto 0 205px;
   padding: 32px 24px 28px;
 }
 .logo {
@@ -57,25 +57,25 @@ body {
   margin-bottom: 6px;
 }
 .logo__mark {
-  font-size: 28px;
+  font-size: 50px;
   line-height: 1;
   color: #60a5fa;
 }
 .logo__name {
-  font-size: 26px;
+  font-size: 50px;
   font-weight: 700;
   letter-spacing: -0.02em;
 }
 .tagline {
   margin: 0;
-  font-size: 14px;
+  font-size: 18px;
   color: #9ca3af;
   letter-spacing: 0.02em;
 }
 
 /* ── Main layout ─────────────────────────────────── */
 .app-main {
-  max-width: 760px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 32px 24px;
   display: flex;
@@ -297,7 +297,7 @@ input:disabled { opacity: 0.6; cursor: not-allowed; }
   text-align: left;
   padding: 8px 12px;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--ink-faint);
@@ -313,17 +313,19 @@ input:disabled { opacity: 0.6; cursor: not-allowed; }
 
 .short-url-link {
   font-family: var(--font-mono);
-  font-size: 5px;
+  font-size: 13px;
+  max-width: 100px;
   color: var(--accent);
   text-decoration: none;
+  overflow: hidden;
   font-weight: 500;
 }
 .short-url-link:hover { text-decoration: underline; }
 
 .full-url {
   display: block;
-  max-width: 140px;
-  overflow: hidden;
+  max-width: 600px;
+  overflow: clip;
   text-overflow: ellipsis;
   white-space: nowrap;
   color: var(--ink-muted);
@@ -331,7 +333,7 @@ input:disabled { opacity: 0.6; cursor: not-allowed; }
 }
 .created-at {
   display: block;
-  max-width: 30px;
+  max-width: 150px;
   overflow: hidden;
   text-overflow: ellipsis;
   color: var(--ink-muted);
