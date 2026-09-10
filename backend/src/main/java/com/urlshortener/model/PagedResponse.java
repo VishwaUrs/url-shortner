@@ -2,6 +2,10 @@ package com.urlshortener.model;
 
 import java.util.List;
 
+/**
+ * Paged Response POJO used for pagination.
+ * @param <T>
+ */
 public class PagedResponse <T>{
 
     private List<T> urlList;

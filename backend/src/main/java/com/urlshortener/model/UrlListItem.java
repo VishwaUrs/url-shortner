@@ -1,5 +1,8 @@
 package com.urlshortener.model;
 
+/*
+Model to store and send the Full Url, its alias, shortened version and the created at timestamp.
+ */
 public class UrlListItem {
     private String alias;
     private String fullUrl;

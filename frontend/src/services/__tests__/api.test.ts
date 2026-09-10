@@ -44,7 +44,7 @@ describe('api service', () => {
 
     await api.listAll();
 
-    expect(fetch).toHaveBeenCalledWith('/urls');
+    expect(fetch).toHaveBeenCalledWith('/urls?page=0&size=10');
   });
 
   it('delete sends DELETE to /{alias}', async () => {

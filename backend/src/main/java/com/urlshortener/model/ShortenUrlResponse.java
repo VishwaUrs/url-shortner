@@ -1,5 +1,8 @@
 package com.urlshortener.model;
 
+/**
+ * Response object used for /shorten API
+ */
 public class ShortenUrlResponse {
     private String shortUrl;
     private String alias;

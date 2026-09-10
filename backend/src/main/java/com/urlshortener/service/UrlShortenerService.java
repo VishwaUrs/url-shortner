@@ -59,12 +59,10 @@ public class UrlShortenerService {
     public boolean delete(String alias) {
         System.out.println("Inside Delete Method to delete the alias"+alias);
         var fullUrl = repository.findFullUrlByAlias(alias).orElse(null);
-        System.out.println("Alias "+alias+" has the URL "+fullUrl);
         if (fullUrl == null) {
             return false;
         }
-        repository.deleteByAlias(alias);
-        return true;
+        return repository.deleteByAlias(alias);
     }
 
     private static String generateAlias() {
