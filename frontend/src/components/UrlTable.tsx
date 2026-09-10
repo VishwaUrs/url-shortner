@@ -1,18 +1,21 @@
 import type { UrlListItem } from '../types/api';
-import {API_BASE} from "../services/api.ts";
 import { useMemo, useState } from 'react';
+import {PaginationControls} from "./PaginationControls.tsx";
 
 interface UrlTableProps {
   urls: UrlListItem[];
   onDelete: (alias: string) => void;
+  page: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
 }
 
 type SortDirection = 'asc' | 'desc';
 
-export function UrlTable({ urls, onDelete }: UrlTableProps) {
-  // TODO: Build URL table UI and wire delete actions.
+export function UrlTable({ urls, onDelete, page, totalPages, onPageChange }: UrlTableProps) {
   void urls;
   void onDelete;
+  void onPageChange;
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
 
   const sortedUrls = useMemo(() => {return [...urls].sort((a, b) => {
@@ -20,7 +23,6 @@ export function UrlTable({ urls, onDelete }: UrlTableProps) {
       return sortDirection === 'asc' ? diff : -diff;
     });
   }, [urls, sortDirection]);
-  console.log("API Base URL", API_BASE);
   const toggleSort = () => {
     setSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'));
   };
@@ -82,6 +84,7 @@ export function UrlTable({ urls, onDelete }: UrlTableProps) {
           )}
           </tbody>
         </table>
+        <PaginationControls page={page} totalPages={totalPages} onPageChange={onPageChange} />
       </div>
   );
 }

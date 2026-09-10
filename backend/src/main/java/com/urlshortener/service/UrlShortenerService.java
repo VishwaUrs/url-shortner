@@ -57,7 +57,6 @@ public class UrlShortenerService {
     }
 
     public boolean delete(String alias) {
-        // TODO: Investigate odd delete behavior reported by clients.
         System.out.println("Inside Delete Method to delete the alias"+alias);
         var fullUrl = repository.findFullUrlByAlias(alias).orElse(null);
         System.out.println("Alias "+alias+" has the URL "+fullUrl);
@@ -69,7 +68,6 @@ public class UrlShortenerService {
     }
 
     private static String generateAlias() {
-        // TODO: Implement alias generation.
         return AliasGenerator.randomAliasGenerate(GENERATED_ALIAS_LENGTH);
     }
 
@@ -113,5 +111,13 @@ public class UrlShortenerService {
         } catch (URISyntaxException ex) {
             throw new IllegalArgumentException("`Full Url must be a valid URL.");
         }
+    }
+
+    public List<UrlListItem> findByPageNumber(int page, int size, String baseUrl) {
+        return repository.findPage(page, size, baseUrl);
+    }
+
+    public int getNumberOfUrls() {
+        return repository.countAll();
     }
 }

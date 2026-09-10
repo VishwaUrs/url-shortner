@@ -80,4 +80,18 @@ public class ShortenedUrlRepository {
                 rs.getString("CREATED_AT")
         );
     }
+
+    public int countAll() {
+        Integer count = jdbc.queryForObject("SELECT COUNT(*) FROM SHORTENED_URLS", Integer.class);
+        return count != null ? count : 0;
+    }
+
+    public List<UrlListItem> findPage(int page, int size, String baseUrl) {
+        int offset = page * size;
+        return jdbc.query(
+                "SELECT ID, ALIAS, FULL_URL, CREATED_AT FROM SHORTENED_URLS " +
+                        "ORDER BY CREATED_AT DESC LIMIT ? OFFSET ?",
+                urlListItemMapper(baseUrl),
+                size, offset);
+    }
 }

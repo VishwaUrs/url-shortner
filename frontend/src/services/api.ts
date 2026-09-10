@@ -1,4 +1,4 @@
-import type { ShortenUrlRequest, ShortenUrlResponse, UrlListItem } from '../types/api';
+import type { ShortenUrlRequest, ShortenUrlResponse, UrlListItem, PagedResponse} from '../types/api';
 
 export const API_BASE = import.meta.env.VITE_API_BASE_URL ?? '';
 
@@ -27,8 +27,9 @@ export const api = {
     }).then((r) => handleResponse<ShortenUrlResponse>(r));
   },
 
-  listAll(): Promise<UrlListItem[]> {
-    return fetch(`${API_BASE}/urls`).then((r) => handleResponse<UrlListItem[]>(r));
+  listAll(page: number = 0, size: number = 10): Promise<PagedResponse<UrlListItem>> {
+    return fetch(`${API_BASE}/urls?page=${page}&size=${size}`)
+        .then((r) => handleResponse<PagedResponse<UrlListItem>>(r));
   },
 
   delete(alias: string): Promise<void> {

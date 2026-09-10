@@ -1,5 +1,6 @@
 package com.urlshortener.controller;
 
+import com.urlshortener.model.PagedResponse;
 import com.urlshortener.model.ShortenUrlRequest;
 import com.urlshortener.model.ShortenUrlResponse;
 import com.urlshortener.model.UrlListItem;
@@ -10,12 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
@@ -42,10 +38,16 @@ public class UrlsController {
     }
 
     @GetMapping("/urls")
-    public List<UrlListItem> getAll(HttpServletRequest requestContext) {
+    public PagedResponse<UrlListItem> getAll(HttpServletRequest requestContext,
+                                             @RequestParam(defaultValue = "0") int page,
+                                             @RequestParam(defaultValue = "10") int size) {
         logger.debug("Inside GET list of Shorten Urls");
         var baseUrl = getBaseUrl(requestContext);
-        return service.getAll(baseUrl);
+        List<UrlListItem> urls = service.findByPageNumber(page, size, baseUrl);
+        int totalItems = service.getNumberOfUrls();
+        int totalPages = (int) Math.ceil((double) totalItems / size);
+
+        return new PagedResponse<>(urls, page, size, totalItems, totalPages);
     }
 
     @GetMapping("/{alias}")

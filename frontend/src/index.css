@@ -296,11 +296,11 @@ input:disabled { opacity: 0.6; cursor: not-allowed; }
 .url-table th {
   text-align: left;
   padding: 8px 12px;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--ink-faint);
+  color: var(--ink);
   border-bottom: 1px solid var(--border);
 }
 .url-table td {
@@ -374,4 +374,44 @@ input:disabled { opacity: 0.6; cursor: not-allowed; }
   .card { padding: 20px 16px; }
   .result-banner__inner { flex-direction: column; align-items: flex-start; }
   .full-url { max-width: 200px; }
+}
+
+/* ── Pagination ──────────────────────────────────────── */
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 16px;
+  justify-content: center;
+}
+.pagination-btn {
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--ink);
+  font-size: 13px;
+  cursor: pointer;
+}
+.pagination-btn:hover:not(:disabled) {
+  background: var(--surface);
+}
+.pagination-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.pagination-btn--active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+.pagination-ellipsis {
+  padding: 0 4px;
+  color: var(--ink-faint);
+}
+.pagination-loading {
+  text-align: center;
+  color: var(--ink-faint);
+  font-size: 13px;
+  margin-top: 8px;
 }

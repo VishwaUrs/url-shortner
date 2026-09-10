@@ -19,3 +19,11 @@ export interface UrlListItem {
 export interface ApiError {
   error: string;
 }
+
+export interface PagedResponse<UrlListItem> {
+  urlList: UrlListItem[];
+  page: number;
+  size: number;
+  totalItems: number;
+  totalPages: number;
+}
