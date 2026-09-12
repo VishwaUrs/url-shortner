@@ -96,6 +96,11 @@ public class UrlsController {
         return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
 
+    /**
+     * Returns the base URL so that the Alias can be appended to it
+     * @param request HttpServletRequest
+     * @return Base URL String
+     */
     private String getBaseUrl(HttpServletRequest request) {
         var scheme = request.getScheme();
         var serverName = request.getServerName();

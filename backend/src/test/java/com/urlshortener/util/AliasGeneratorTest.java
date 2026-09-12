@@ -8,6 +8,6 @@ class AliasGeneratorTest {
 
     @Test
     void shorten_WithValidUrl_ReturnsShortUrlResponse()  {
-        assertNotNull(AliasGenerator.randomAliasGenerate(7));
+        assertNotNull(AliasGenerator.generateRandomAlias(7));
     }
 }

@@ -46,8 +46,8 @@ class UrlsControllerIntegrationTests {
     @Test
     void getAlias_ExistingAlias_Returns200_With_Redirected_Page() {
         var response = restTemplate.getForEntity("/redir", String.class);
-        //In spring boot 4, it redirects automatically and sends the redirected webpage. Hence the status returned in 200OK
+        //In spring boot 4, it redirects automatically and sends the redirected webpage. Hence, the status returned is 200OK
         assertThat(response.getStatusCode()).isEqualTo(OK);
-        //assertThat(response.getHeaders().getLocation()).hasToString("https://target.com/");
+        assertThat(response.getHeaders().getLocation()).hasToString("https://target.com/");
     }
 }

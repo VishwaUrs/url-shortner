@@ -2,6 +2,8 @@ package com.urlshortener.repository;
 
 import com.urlshortener.model.UrlListItem;
 import jakarta.annotation.PostConstruct;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -16,7 +18,7 @@ import java.util.Optional;
 public class ShortenedUrlRepository {
 
     private final JdbcTemplate jdbc;
-
+    private final Logger logger = LogManager.getLogger(ShortenedUrlRepository.class);
     public ShortenedUrlRepository(JdbcTemplate jdbc) {
         this.jdbc = jdbc;
     }
@@ -58,6 +60,9 @@ public class ShortenedUrlRepository {
                     "SELECT ALIAS FROM `SHORTENED_URLS` WHERE FULL_URL = ?",
                     String.class,
                     fullUrl);
+            if(alias != null && !alias.isEmpty()){
+                logger.debug("The Full URL : {} already has an Alias : {} created", fullUrl, alias);
+            }
             return Optional.ofNullable(alias);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
@@ -78,7 +83,7 @@ public class ShortenedUrlRepository {
     /**
      * Returns the Full URL if exists for the Alias passed
      * @param alias Alias of the Full URL
-     * @return Full URL
+     * @return Full URL mapped to the Alias
      */
     public Optional<String> findFullUrlByAlias(String alias) {
         var results = jdbc.query("SELECT FULL_URL FROM SHORTENED_URLS WHERE ALIAS = ? LIMIT 1",
@@ -90,7 +95,7 @@ public class ShortenedUrlRepository {
     /**
      * Returns all the rows from the database mapped to URLListItem
      * @param baseUrl Base URL used to generate the Shortened URL using the alias
-     * @return List of UrlListItem
+     * @return List of UrlListItem objects
      */
     public List<UrlListItem> findAll(String baseUrl) {
         return jdbc.query("SELECT ALIAS, FULL_URL, CREATED_AT FROM SHORTENED_URLS",

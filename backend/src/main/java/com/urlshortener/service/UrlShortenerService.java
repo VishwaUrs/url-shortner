@@ -5,6 +5,8 @@ import com.urlshortener.model.ShortenUrlResponse;
 import com.urlshortener.model.UrlListItem;
 import com.urlshortener.repository.ShortenedUrlRepository;
 import com.urlshortener.util.AliasGenerator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import java.net.URI;
@@ -18,7 +20,7 @@ public class UrlShortenerService {
 
     private static final String ALIAS_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     private static final int GENERATED_ALIAS_LENGTH = 7;
-
+    private final Logger logger = LogManager.getLogger(UrlShortenerService.class);
     private final ShortenedUrlRepository repository;
 
     public UrlShortenerService(ShortenedUrlRepository repository) {
@@ -26,26 +28,29 @@ public class UrlShortenerService {
     }
 
     public ShortenUrlResponse shorten(ShortenUrlRequest request, String baseUrl) {
+
         var fullUrl = normalizeUrl(request.getFullUrl());
 
         Optional<String> alias = repository.checkAndRetrieveAliasIfURLExists(fullUrl);
-        if(repository.checkAndRetrieveAliasIfURLExists(fullUrl).isPresent()){
-            return new ShortenUrlResponse(baseUrl + "/" + alias.get(), alias.get(), fullUrl);
-        } else {
+
+        if (alias.isEmpty()) {
+            logger.debug("Full URL does not have an alias already present.");
             alias = Optional.of(request.getCustomAlias() == null || request.getCustomAlias().isBlank()
                     ? generateAlias()
                     : request.getCustomAlias().trim());
 
             if (!isValidAlias(alias.get())) {
-                throw new IllegalArgumentException("Alias may only contain letters, numbers, and hyphens (2–64 characters).");
+                throw new IllegalArgumentException("Alias can only contain letters, numbers, and hyphens (2–64 characters).");
             }
 
             if (repository.existsByAlias(alias.get())) {
-                throw new IllegalStateException("The alias '" + alias + "' is already taken.");
+                //very rare case.
+                throw new IllegalStateException("The newly generated Alias '" + alias + "' is already taken.");
             }
-                repository.save(alias.get(), fullUrl, Instant.now());
-                return new ShortenUrlResponse(baseUrl + "/" + alias.get(), alias.get(), fullUrl);
+
+            repository.save(alias.get(), fullUrl, Instant.now());
         }
+        return new ShortenUrlResponse(baseUrl + "/" + alias.get(), alias.get(), fullUrl);
     }
 
     public String getFullUrl(String alias) {
@@ -57,7 +62,6 @@ public class UrlShortenerService {
     }
 
     public boolean delete(String alias) {
-        System.out.println("Inside Delete Method to delete the alias"+alias);
         var fullUrl = repository.findFullUrlByAlias(alias).orElse(null);
         if (fullUrl == null) {
             return false;
@@ -66,7 +70,7 @@ public class UrlShortenerService {
     }
 
     private static String generateAlias() {
-        return AliasGenerator.randomAliasGenerate(GENERATED_ALIAS_LENGTH);
+        return AliasGenerator.generateRandomAlias(GENERATED_ALIAS_LENGTH);
     }
 
     private static boolean isValidAlias(String alias) {
